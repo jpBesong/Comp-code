@@ -1,0 +1,77 @@
+package com.example.john_paulbesong.bot_tester;
+
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+
+
+public class MainActivity extends Activity {
+    Button button;
+    ImageView imageview;
+    Drawable drawable;
+    Bitmap bitmap1, bitmap2;
+    ByteArrayOutputStream outPut;
+    byte[] BYTE;
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        outPut = new ByteArrayOutputStream();
+
+        final BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+        bitmapOptions.inSampleSize = 3;
+
+        button = (Button)findViewById(R.id.button1);
+
+        imageview = (ImageView)findViewById(R.id.imageView1);
+
+        drawable = getResources().getDrawable(R.drawable.cab);
+
+        bitmap1 = ((BitmapDrawable)(drawable)).getBitmap();
+        int byter = bitmap1.getByteCount();
+        String myStr = String.valueOf(byter);
+
+
+
+        Log.e("Original Image Size",myStr);
+        Log.e("Original dimension", bitmap1.getWidth() + " " + bitmap1.getHeight());
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Auto-generated method stub
+
+
+                bitmap1.compress(Bitmap.CompressFormat.JPEG,100, outPut);
+
+                BYTE = outPut.toByteArray();
+
+                bitmap2 = BitmapFactory.decodeByteArray(BYTE,0,BYTE.length,bitmapOptions);
+
+                imageview.setImageBitmap(bitmap2);
+                int bytes = bitmap2.getByteCount();
+                String tmpStr = String.valueOf(bytes);
+                Toast.makeText(MainActivity.this, "Image Compressed Successfully", Toast.LENGTH_LONG).show();
+                Log.e("Compressed dimension", bitmap2.getWidth() + " " + bitmap2.getHeight());
+                Log.e("Compressed Image Size",tmpStr);
+
+            }
+
+        });
+
+    }
+
+    }
